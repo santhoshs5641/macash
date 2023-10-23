@@ -65,11 +65,10 @@ class _TransactionListPageState extends State<TransactionListPage> {
       final isExpense = transaction.IN == 'Expense';
 
       bool isWithinCustomDateRange = true;
-      if (dateRange != null) {
+       if (dateRange != null) {
         isWithinCustomDateRange =
-            isTransactionWithinDateRange(transaction.dateTime, dateRange);
+            isWithinCustomDateRange && isTransactionWithinDateRange(transaction.dateTime, dateRange);
       }
-
       switch (selectedFilter) {
         case FilterOption.All:
           return (nameMatches || explainMatches) && isWithinCustomDateRange;
@@ -77,11 +76,16 @@ class _TransactionListPageState extends State<TransactionListPage> {
           return (nameMatches || explainMatches) && isIncome && isWithinCustomDateRange;
         case FilterOption.Expense:
           return (nameMatches || explainMatches) && isExpense && isWithinCustomDateRange;
-        case FilterOption.Yesterday:
-          final yesterday = DateTime.now().subtract(const Duration(days: 1));
-          return (nameMatches || explainMatches) &&
-              transaction.dateTime.isAfter(yesterday) &&
-              isWithinCustomDateRange;
+      case FilterOption.Yesterday:
+  final yesterday = DateTime.now().subtract(const Duration(days: 1));
+  final isTransactionYesterday =
+      transaction.dateTime.year == yesterday.year &&
+      transaction.dateTime.month == yesterday.month &&
+      transaction.dateTime.day == yesterday.day;
+  return (nameMatches || explainMatches) &&
+         isTransactionYesterday &&
+         isWithinCustomDateRange;
+
         case FilterOption.ThisMonth:
           final startOfMonth = DateTime(DateTime.now().year, DateTime.now().month, 1);
           return (nameMatches || explainMatches) &&

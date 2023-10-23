@@ -75,7 +75,7 @@ Widget headWidget(BuildContext context) {
       ),
       Positioned(
         top: 140,
-        left: 47,
+        left: 32,
         child: Container(
           height: 170,
           width: 320,
